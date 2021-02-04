@@ -5,6 +5,7 @@ const app = express();
 const database = require('./database');
 const bodyParser = require('body-parser');
 const dns = require('dns');
+const url = require('url');
 
 // Basic Configuration
 const port = process.env.PORT || 3000;
@@ -30,8 +31,8 @@ app.listen(port, function() {
 
 app.post('/api/shorturl/new', (req, res) => {
   let originalUrl = req.body.url;
-  console.log(req.body.url);
-  validateUrl(originalUrl, (addresses) => {
+  let parsedUrl = url.parse(originalUrl);
+  validateUrl(parsedUrl.host, (addresses) => {
     if (addresses) {
       database.saveToDatabase(originalUrl, (urlAlias) => {
         res.json({original_url: originalUrl, short_url: urlAlias});
