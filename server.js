@@ -30,14 +30,13 @@ app.listen(port, function() {
 
 app.post('/api/shorturl/new', (req, res) => {
   let originalUrl = req.body.url;
-  validateUrl(originalUrl.host, (error) => {
-    if (!error) {
-      let href = originalUrl.href;
-      database.saveToDatabase(href, (urlAlias) => {
-        res.json({original_url: href, short_url: urlAlias});
+  console.log(req.body.url);
+  validateUrl(originalUrl, (addresses) => {
+    if (addresses) {
+      database.saveToDatabase(originalUrl, (urlAlias) => {
+        res.json({original_url: originalUrl, short_url: urlAlias});
       });
     } else {
-      console.log(`Invalid URL: ${originalUrl}`)
       res.json({ error: 'invalid url' });
     }
   });
@@ -50,10 +49,8 @@ app.get('/api/shortcut/:alias', (req, res) => {
 });
 
 function validateUrl(url, response) {
-  try {
-    new URL(url);
-    response(null);
-  } catch (err) {
-    response(err);
-  }
+  dns.lookup(url, {all: true}, (err, addresses) => {
+    console.log(`Validating ${url}`)
+    response(addresses);
+  });
 }
