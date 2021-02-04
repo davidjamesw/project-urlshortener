@@ -32,7 +32,6 @@ app.post('/api/shorturl/new', (req, res) => {
   let originalUrl = req.body.url;
   if (!validUrl.isUri(originalUrl)) {
     res.json({ error: 'invalid url' });
-    return;
   }
   const urlAlias = database.saveToDatabase(originalUrl, (err) => {
     res.send(err);
