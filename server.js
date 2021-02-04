@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const app = express();
+const database = require('./database');
 
 // Basic Configuration
 const port = process.env.PORT || 3000;
@@ -21,4 +22,10 @@ app.get('/api/hello', function(req, res) {
 
 app.listen(port, function() {
   console.log(`Listening on port ${port}`);
+});
+
+app.post('/api/shorturl/new', (req, res) => {
+  const urlAlias = database.saveToDatabase("test");
+  res.json({original_url: "test", short_url: urlAlias});
+  console.log(req);
 });
