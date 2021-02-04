@@ -32,11 +32,12 @@ app.post('/api/shorturl/new', (req, res) => {
   let originalUrl = req.body.url;
   if (!validUrl.isUri(originalUrl)) {
     res.json({ error: 'invalid url' });
+  } else {
+    const urlAlias = database.saveToDatabase(originalUrl, (err) => {
+      res.send(err);
+    });
+    res.json({original_url: originalUrl, short_url: urlAlias});
   }
-  const urlAlias = database.saveToDatabase(originalUrl, (err) => {
-    res.send(err);
-  });
-  res.json({original_url: originalUrl, short_url: urlAlias});
 });
 
 app.get('/api/shortcut/:alias', (req, res) => {
