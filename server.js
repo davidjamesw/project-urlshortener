@@ -30,6 +30,7 @@ app.listen(port, function() {
 
 app.post('/api/shorturl/new', (req, res) => {
   let originalUrl = req.body.url;
+  console.log(req.body.url);
   validateUrl(originalUrl, (addresses) => {
     if (addresses) {
       database.saveToDatabase(originalUrl, (urlAlias) => {
@@ -47,8 +48,9 @@ app.get('/api/shortcut/:alias', (req, res) => {
   });
 });
 
-function validateUrl(url, invalid) {
+function validateUrl(url, response) {
   dns.lookup(url, {all: true}, (err, addresses) => {
-    invalid(addresses);
+    console.log(`Validating ${url}`)
+    response(addresses);
   });
 }
