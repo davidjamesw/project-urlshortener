@@ -17,9 +17,9 @@ function saveToDatabase(url, response) {
   let urlAlias = crypto.randomBytes(4).toString('hex');
   let mappedUrl = new Url({"url": url, "alias": urlAlias});
   console.log(`Writing ${url} to the database, with an alias of ${urlAlias}`);
-    mappedUrl.save((err, data) => {
-      response(err, urlAlias);
-    });
+  mappedUrl.save((err, data) => {
+    response(err, urlAlias);
+  });
 }
 
 function getUrlFromDatabase(urlAlias, sendResponse) {
