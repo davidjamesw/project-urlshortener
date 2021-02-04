@@ -27,7 +27,5 @@ app.listen(port, function() {
 app.post('/api/shorturl/new', (req, res) => {
   const urlAlias = database.saveToDatabase("test");
   res.json({original_url: "test", short_url: urlAlias});
-  console.log(req.params);
-  console.log(req.path);
-  console.log(req.url);
+  console.log(req.body.url);
 });
