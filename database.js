@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const mongodb = require('mongodb');
 const crypto = require('crypto');
+const { isNullOrUndefined } = require('util');
 
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -17,8 +18,12 @@ function saveToDatabase(url, response) {
   let urlAlias = crypto.randomBytes(4).toString('hex');
   let mappedUrl = new Url({"url": url, "alias": urlAlias});
   console.log(`Writing ${url} to the database, with an alias of ${urlAlias}`);
+
   mappedUrl.save((err, data) => {
-    response(err, urlAlias);
+    if (err) {
+      console.error(err);
+    }
+    response(urlAlias);
   });
 }
 
@@ -26,11 +31,13 @@ function getUrlFromDatabase(urlAlias, sendResponse) {
   console.log(`Retrieving URL from database using ${urlAlias}`);
   Url.find({alias: urlAlias}, (err, urls) => {
     if (err) {
-      sendResponse(err, null);
+      console.error(err);
     }
     if (urls.length > 0) {
       url = urls[0].url;
-      sendResponse(null, url);
+      sendResponse(url);
+    } else {
+      sendResponse("");
     }
   });
 }
