@@ -10,6 +10,7 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 
 app.use('/public', express.static(`${process.cwd()}/public`));
+app.use(express.json());
 
 app.get('/', function(req, res) {
   res.sendFile(process.cwd() + '/views/index.html');
@@ -25,7 +26,7 @@ app.listen(port, function() {
 });
 
 app.post('/api/shorturl/new', (req, res) => {
+  console.log(req.body);
   const urlAlias = database.saveToDatabase("test");
   res.json({original_url: "test", short_url: urlAlias});
-  console.log(req);
 });
