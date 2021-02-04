@@ -13,20 +13,29 @@ const urlSchema = new Schema({
 
 const Url = mongoose.model("Url", urlSchema);
 
-function saveToDatabase(url) {
+function saveToDatabase(url, errorResponse) {
   let urlAlias = crypto.randomBytes(4).toString('hex');
   let mappedUrl = new Url({"url": url, "alias": urlAlias});
   console.log(`Writing ${url} to the database, with an alias of ${urlAlias}`);
-    mappedUrl.save(function(err, data) {
+    mappedUrl.save((err, data) => {
       if (err) {
-        return console.error(err);
+        return errorResponse(err);
       }
     });
   return urlAlias;
 }
 
-function getUrlFromDatabase(urlAlias) {
-  console.log(`Retrieving URL from databse using ${urlAlias}`);
+function getUrlFromDatabase(urlAlias, sendResponse) {
+  console.log(`Retrieving URL from database using ${urlAlias}`);
+  Url.find({alias: urlAlias}, (err, urls) => {
+    if (err) {
+      return sendResponse(err, null);
+    }
+    if (urls.length > 0) {
+      url = urls[0].url;
+      sendResponse(null, url);
+    }
+  });
 }
 
 exports.saveToDatabase = saveToDatabase;

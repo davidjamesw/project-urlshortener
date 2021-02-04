@@ -29,6 +29,17 @@ app.listen(port, function() {
 
 app.post('/api/shorturl/new', (req, res) => {
   let originalUrl = req.body.url;
-  const urlAlias = database.saveToDatabase(originalUrl);
+  const urlAlias = database.saveToDatabase(originalUrl, (err) => {
+    res.send(err);
+  });
   res.json({original_url: originalUrl, short_url: urlAlias});
+});
+
+app.get('/api/shortcut/:alias', (req, res) => {
+  const url = database.getUrlFromDatabase(req.params.alias, (err, url) => {
+    if (err) {
+      res.send(err);
+    }
+    res.redirect(url);
+  });
 });
