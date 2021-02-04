@@ -19,7 +19,7 @@ function saveToDatabase(url, errorResponse) {
   console.log(`Writing ${url} to the database, with an alias of ${urlAlias}`);
     mappedUrl.save((err, data) => {
       if (err) {
-        return errorResponse(err);
+        errorResponse(err);
       }
     });
   return urlAlias;
@@ -29,7 +29,7 @@ function getUrlFromDatabase(urlAlias, sendResponse) {
   console.log(`Retrieving URL from database using ${urlAlias}`);
   Url.find({alias: urlAlias}, (err, urls) => {
     if (err) {
-      return sendResponse(err, null);
+      sendResponse(err, null);
     }
     if (urls.length > 0) {
       url = urls[0].url;
