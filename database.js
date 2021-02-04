@@ -13,14 +13,12 @@ const urlSchema = new Schema({
 
 const Url = mongoose.model("Url", urlSchema);
 
-function saveToDatabase(url, errorResponse) {
+function saveToDatabase(url, response) {
   let urlAlias = crypto.randomBytes(4).toString('hex');
   let mappedUrl = new Url({"url": url, "alias": urlAlias});
   console.log(`Writing ${url} to the database, with an alias of ${urlAlias}`);
     mappedUrl.save((err, data) => {
-      if (err) {
-        errorResponse(err);
-      }
+      response(err, urlAlias);
     });
   return urlAlias;
 }

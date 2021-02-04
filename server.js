@@ -32,10 +32,13 @@ app.post('/api/shorturl/new', (req, res) => {
   let originalUrl = req.body.url;
   validateUrl(originalUrl, (addresses) => {
     if (addresses) {
-      const urlAlias = database.saveToDatabase(originalUrl, (err) => {
-        res.send(err);
+      database.saveToDatabase(originalUrl, (err, urlAlias) => {
+        if (err) {
+          res.send(err);
+        } else {
+          res.json({original_url: originalUrl, short_url: urlAlias});
+        }
       });
-      res.json({original_url: originalUrl, short_url: urlAlias});
     } else {
       res.json({ error: 'invalid url' });
     }
