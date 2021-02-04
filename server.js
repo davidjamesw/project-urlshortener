@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const database = require('./database');
+var bodyParser = require('body-parser');
 
 // Basic Configuration
 const port = process.env.PORT || 3000;
@@ -10,7 +11,8 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 
 app.use('/public', express.static(`${process.cwd()}/public`));
-app.use(express.json());
+
+app.use(bodyParser.urlencoded({extended: false}));
 
 app.get('/', function(req, res) {
   res.sendFile(process.cwd() + '/views/index.html');
@@ -26,7 +28,7 @@ app.listen(port, function() {
 });
 
 app.post('/api/shorturl/new', (req, res) => {
-  console.log(req.body);
-  const urlAlias = database.saveToDatabase("test");
-  res.json({original_url: "test", short_url: urlAlias});
+  let originalUrl = req.body.url;
+  const urlAlias = database.saveToDatabase(originalUrl);
+  res.json({original_url: originalUrl, short_url: urlAlias});
 });
