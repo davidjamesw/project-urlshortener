@@ -20,7 +20,6 @@ function saveToDatabase(url, response) {
     mappedUrl.save((err, data) => {
       response(err, urlAlias);
     });
-  return urlAlias;
 }
 
 function getUrlFromDatabase(urlAlias, sendResponse) {
