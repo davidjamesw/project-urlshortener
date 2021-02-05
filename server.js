@@ -31,7 +31,7 @@ app.listen(port, function() {
 
 app.post('/api/shorturl/new', (req, res) => {
   let originalUrl = req.body.url;
-  let parsedUrl = url.parse(originalUrl);
+  let parsedUrl = new URL(originalUrl);
   validateUrl(parsedUrl.host, (addresses) => {
     if (addresses) {
       database.saveToDatabase(originalUrl, (urlAlias) => {
