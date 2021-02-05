@@ -51,6 +51,11 @@ app.get('/api/shorturl/:alias', (req, res) => {
 function validateUrl(url, response) {
   try {
     let parsedUrl = new URL(url);
+    if (parsedUrl.protocol != "http:" && parsedUrl.protocol != "https:") {
+      console.log(parsedUrl.protocol);
+      response(null);
+      return;
+    }
 
     dns.lookup(parsedUrl.host, {all: true}, (err, addresses) => {
       if (url) {
@@ -61,6 +66,7 @@ function validateUrl(url, response) {
       }
     });
   } catch (err) {
+    console.error(err);
     response(null);
   }
 }
