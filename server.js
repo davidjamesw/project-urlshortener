@@ -31,8 +31,7 @@ app.listen(port, function() {
 
 app.post('/api/shorturl/new', (req, res) => {
   let originalUrl = req.body.url;
-  let parsedUrl = new URL(originalUrl);
-  validateUrl(parsedUrl.host, (addresses) => {
+  validateUrl(originalUrl, (addresses) => {
     if (addresses) {
       database.saveToDatabase(originalUrl, (urlAlias) => {
         res.json({original_url: originalUrl, short_url: urlAlias});
@@ -50,12 +49,18 @@ app.get('/api/shorturl/:alias', (req, res) => {
 });
 
 function validateUrl(url, response) {
-  dns.lookup(url, {all: true}, (err, addresses) => {
-    if (url) {
-      console.log(`Validating ${url}`)
-      response(addresses);
-    } else {
-      response(null);
-    }
-  });
+  try {
+    let parsedUrl = new URL(url);
+
+    dns.lookup(parsedUrl.host, {all: true}, (err, addresses) => {
+      if (url) {
+        console.log(`Validating ${url}`)
+        response(addresses);
+      } else {
+        response(null);
+      }
+    });
+  } catch (err) {
+    response(null);
+  }
 }
