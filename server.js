@@ -43,7 +43,7 @@ app.post('/api/shorturl/new', (req, res) => {
   });
 });
 
-app.get('/api/shortcut/:alias', (req, res) => {
+app.get('/api/shorturl/:alias', (req, res) => {
   const url = database.getUrlFromDatabase(req.params.alias, (url) => {
     res.redirect(url);
   });
