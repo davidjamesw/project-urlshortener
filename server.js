@@ -52,7 +52,6 @@ function validateUrl(url, response) {
   try {
     let parsedUrl = new URL(url);
     if (parsedUrl.protocol != "http:" && parsedUrl.protocol != "https:") {
-      console.log(parsedUrl.protocol);
       response(null);
       return;
     }
