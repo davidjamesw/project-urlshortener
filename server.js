@@ -51,7 +51,11 @@ app.get('/api/shorturl/:alias', (req, res) => {
 
 function validateUrl(url, response) {
   dns.lookup(url, {all: true}, (err, addresses) => {
-    console.log(`Validating ${url}`)
-    response(addresses);
+    if (url) {
+      console.log(`Validating ${url}`)
+      response(addresses);
+    } else {
+      response(null);
+    }
   });
 }
